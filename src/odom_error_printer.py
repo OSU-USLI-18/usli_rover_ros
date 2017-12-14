@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python2
 
 import rospy
 import math
@@ -29,7 +29,7 @@ def callback(truth,odom):
     (rt, pt, yt) = euler_from_quaternion([xt, yt, zt, wt])  
     t_ODOM_error = yt-yo  
     
-    print "{0},{1},{2},{3}".format(rospy.get_time(),x_ODOM_error, y_ODOM_error, t_ODOM_error)
+    #print "{0},{1},{2},{3}".format(rospy.get_time(),x_ODOM_error, y_ODOM_error, t_ODOM_error)
 
 
 # main function call

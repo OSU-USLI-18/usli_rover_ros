@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/python2
 
-import rospy
 import math
+import rospy
 import tf
 from tf.transformations import euler_from_quaternion
 import message_filters
@@ -38,7 +38,7 @@ def callback(truth,odom):
       y_SLAM_error = trans[1]-y_ODOM_error
       t_SLAM_error = rot[2]-t_ODOM_error
   
-      print "{0},{1},{2},{3}".format(rospy.get_time(), x_SLAM_error, y_SLAM_error, t_SLAM_error)
+      #print "{0},{1},{2},{3}".format(rospy.get_time(), x_SLAM_error, y_SLAM_error, t_SLAM_error)
 
     except(tf.LookupException, tf.ConnectivityException):
       pass
