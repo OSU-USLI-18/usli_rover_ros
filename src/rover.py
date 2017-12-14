@@ -1,12 +1,12 @@
 #!/usr/bin/python2
 
+import math
 import rospy
 import tf 
 from tf.transformations import euler_from_quaternion
 import message_filters
-import math
 
-from sensor_msgs.msg import LaserScan
+from sensor_msgs.msg import LaserScan, Range
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Twist
 
@@ -55,6 +55,10 @@ def getCurrentCoor():
 
 def callback(scan,odom):
 
+    if rospy.is_shutdown():
+        shutdownRoutine()
+
+
     # find laser scanner properties (min scan angle, max scan angle, scan angle increment)
     #http://docs.ros.org/api/sensor_msgs/html/msg/Range.html
     sensorMaxAngle = scan.angle_max
@@ -89,7 +93,6 @@ def callback(scan,odom):
 
 if __name__ == "__main__":
     rospy.init_node('rover', disable_signals=False, log_level=rospy.DEBUG)
-    rospy.on_shutdown(shutdownRoutine)
 
     # subscribe to laser scan message
     sub = message_filters.Subscriber('base_scan', LaserScan)
