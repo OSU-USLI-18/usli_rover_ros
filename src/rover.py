@@ -1,8 +1,6 @@
 #!/usr/bin/python2
 import math
 import rospy
-import tf 
-from tf.transformations import euler_from_quaternion
 import message_filters
 
 #ros imports
@@ -12,14 +10,11 @@ from geometry_msgs.msg import Twist
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 
 #custom imports
-from models import roverOperation
-
+from polyfill import roverOperation
 
 #globals
 obstableAvoidanceThreshold = 2.0
 roverState = roverOperation.intermediate
-
-
 
 def initTwist():
     command = Twist()
@@ -38,26 +33,6 @@ def shutdownRoutine():
     #activate solar servos
     rospy.sleep(2)
     print("finished deploying solar panels...")
-
-def getEuler():
-    odom = Odometry()
-    # find current orientation of robot based on odometry (quaternion coordinates)
-    xOr = odom.pose.pose.orientation.x
-    yOr = odom.pose.pose.orientation.y
-    zOr = odom.pose.pose.orientation.z
-    wOr = odom.pose.pose.orientation.w
-
-    # find orientation of robot (Euler coordinates)
-    (roll, pitch, yaw) = euler_from_quaternion([xOr, yOr, zOr, wOr])
-    return (roll, pitch, yaw)
-
-def getCurrentCoor():
-    odom = Odometry()
-
-    currX = odom.pose.pose.position.x
-    currY = odom.pose.pose.position.y
-
-    return (currX,currY)
 
 def basicAvoidance(scan):
     # find laser scanner properties (min scan angle, max scan angle, scan angle increment)
@@ -90,10 +65,7 @@ def basicAvoidance(scan):
 
     return newMovementCommand
 
-
 def callback(scan,odom):
-    
-
     if roverState == roverOperation.alignment:
         print("alignment alg")
     elif roverState == roverOperation.intermediate:
@@ -104,8 +76,6 @@ def callback(scan,odom):
         print("basic alg")
 
     roverPublish.publish(newMovementCommand)
-
-            
 
 if __name__ == "__main__":
     rospy.init_node('rover', disable_signals=False, log_level=rospy.DEBUG)
