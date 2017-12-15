@@ -1,25 +1,25 @@
 #!/usr/bin/python2
-
 import math
 import rospy
 import tf 
 from tf.transformations import euler_from_quaternion
 import message_filters
-import enum
 
+#ros imports
 from sensor_msgs.msg import LaserScan, Range
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Twist
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 
+#custom imports
+from models import roverOperation
 
+
+#globals
 obstableAvoidanceThreshold = 2.0
+roverState = roverOperation.intermediate
 
-class roverOperation(enum.Enum):
-    alignment = 0
-    basic = 1
-    intermediate = 2
-    advance = 3
+
 
 def initTwist():
     command = Twist()
@@ -36,6 +36,7 @@ def initTwist():
 def shutdownRoutine():
     print("deploying solar panels...")
     #activate solar servos
+    rospy.sleep(2)
     print("finished deploying solar panels...")
 
 def getEuler():
@@ -90,9 +91,8 @@ def basicAvoidance(scan):
     return newMovementCommand
 
 
-
 def callback(scan,odom):
-    roverState = roverOperation.intermediate
+    
 
     if roverState == roverOperation.alignment:
         print("alignment alg")
