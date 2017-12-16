@@ -81,13 +81,13 @@ if __name__ == "__main__":
     rospy.init_node('rover', disable_signals=False, log_level=rospy.DEBUG)
 
     # subscribe to laser scan message
-    sub = message_filters.Subscriber('base_scan', LaserScan)
+    subScanner = message_filters.Subscriber('base_scan', LaserScan)
 
     # subscribe to odometry message    
-    sub2 = message_filters.Subscriber('odom', Odometry)
+    subOdom = message_filters.Subscriber('odom', Odometry)
 
     # synchronize laser scan and odometry data
-    ts = message_filters.TimeSynchronizer([sub, sub2], 10)
+    ts = message_filters.TimeSynchronizer([subScanner, subOdom], 10)
     ts.registerCallback(callback)
 
     roverPublish = rospy.Publisher('cmd_vel',Twist)
